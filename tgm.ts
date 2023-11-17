@@ -142,7 +142,6 @@ namespace TGM {
 
         putCurrentPiece() {
             this.blockState.positions().forEach(e => {
-                console.log(e);
                 this.field.field[e.y][e.x] = this.blockState.pieceType
             })
         }

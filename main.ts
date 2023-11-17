@@ -22,17 +22,40 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     TGM.rotate(true)
 })
 function drawFieldBlocks () {
-    field.fill(15)
+    field.fill(10)
     for (let x = 0; x <= 9; x++) {
         for (let y = 0; y <= 19; y++) {
             drawBlock(x, y, TGM.getPiece(x, y), field)
         }
     }
-    for (let point2 of TGM.ghostPiecePositions()) {
-        drawBlock(point2.x, point2.y, 9, field)
+    for (let point of TGM.ghostPiecePositions()) {
+        drawBlock(point.x, point.y, 9, field)
     }
-    for (let point2 of TGM.currentPiecePositions()) {
-        drawBlock(point2.x, point2.y, point2.pieceType, field)
+    for (let point of TGM.currentPiecePositions()) {
+        drawBlock(point.x, point.y, point.pieceType, field)
+    }
+}
+function checkErasing () {
+    if (erasing) {
+        erasing = false
+        music.play(music.melodyPlayable(music.magicWand), music.PlaybackMode.InBackground)
+        pause(400)
+        TGM.erase()
+        TGM.popNext()
+        TGM.pushRandomNext()
+    }
+}
+function checkPut () {
+    if (put) {
+        put = false
+        music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
+        if (TGM.markErasingRows() > 0) {
+            erasing = true
+        } else {
+            pause(200)
+            TGM.popNext()
+            TGM.pushRandomNext()
+        }
     }
 }
 function drawBlock (x: number, y: number, color: number, image2: Image) {
@@ -48,8 +71,9 @@ function shouldMoveRight () {
     }
     return right == 1 || right > 15
 }
-let erasing = 0
 let right = 0
+let put = false
+let erasing = false
 let left = 0
 let next: Image = null
 let field: Image = null
@@ -68,14 +92,8 @@ TGM.pushRandomNextForFirst()
 TGM.popNext()
 TGM.pushRandomNext()
 game.onUpdate(function () {
-    if (erasing > 0) {
-        erasing += -1
-        if (erasing == 0) {
-            TGM.erase()
-            TGM.popNext()
-            TGM.pushRandomNext()
-        }
-    }
+    checkErasing()
+    checkPut()
     if (shouldMoveRight()) {
         TGM.moveRight()
     }
@@ -85,15 +103,7 @@ game.onUpdate(function () {
     if (controller.down.isPressed()) {
         if (!(TGM.moveDown())) {
             TGM.putCurrentPiece()
-            music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
-            if (TGM.markErasingRows() > 0) {
-                music.play(music.melodyPlayable(music.magicWand), music.PlaybackMode.InBackground)
-                erasing = 20
-            } else {
-                pause(200)
-                TGM.popNext()
-                TGM.pushRandomNext()
-            }
+            put = true
         }
     }
     drawFieldBlocks()

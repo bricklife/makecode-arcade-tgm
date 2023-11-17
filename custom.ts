@@ -42,6 +42,35 @@ namespace TGM {
     }
 
     //% block
+    export function pushRandomNext() {
+        const pieceType = allPieceType[Math.floor(Math.random() * allPieceType.length)]
+        gameController.pushNext(pieceType)
+    }
+
+    //% block
+    export function pushRandomNextForFirst() {
+        const pieceType = allPieceTypeForFirst[Math.floor(Math.random() * allPieceTypeForFirst.length)]
+        gameController.pushNext(pieceType)
+    }
+
+    //% block
+    export function nextPieces(): PieceType[] {
+        return gameController.nextPieces
+    }
+
+    //% block
+    export function popNext() {
+        gameController.popNext()
+    }
+
+    //% block
+    export function nextPiecePositions(index: number): Point[] {
+        const pieceType = gameController.nextPieces[index]
+        const positions = allBlocks[pieceType][0]
+        return positions.map(e => new Point(e[0], e[1], pieceType))
+    }
+
+    //% block
     export function currentPiecePositions(): Point[] {
         return gameController.blockState.positions()
             .map(e => new Point(e.x - 1, e.y - 1, gameController.blockState.pieceType))
@@ -85,18 +114,6 @@ namespace TGM {
     //% block
     export function erase() {
         gameController.erase()
-    }
-
-    //% block
-    export function putRandomNext() {
-        const pieceType = allPieceType[Math.floor(Math.random() * allPieceType.length)]
-        gameController.blockState = new BlockState(pieceType, 5, 1)
-    }
-
-    //% block
-    export function putRandomNextForFirst() {
-        const pieceType = allPieceTypeForFirst[Math.floor(Math.random() * allPieceTypeForFirst.length)]
-        gameController.blockState = new BlockState(pieceType, 5, 1)
     }
 }
 

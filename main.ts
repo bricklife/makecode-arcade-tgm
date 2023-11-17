@@ -12,17 +12,23 @@ function shouldMoveLeft () {
     }
     return left == 1 || left > 15
 }
+function drawNextPiece () {
+    next.fill(0)
+    for (let point of TGM.nextPiecePositions(0)) {
+        drawBlock(point.x + 4, point.y, point.pieceType, next)
+    }
+}
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     TGM.rotate(true)
 })
 function drawAllBlocks () {
     for (let x = 0; x <= 9; x++) {
         for (let y = 0; y <= 19; y++) {
-            drawBlock(x, y, TGM.getPiece(x, y))
+            drawBlock(x, y, TGM.getPiece(x, y), field)
         }
     }
-    for (let point of TGM.currentPiecePositions()) {
-        drawBlock(point.x, point.y, point.pieceType)
+    for (let point2 of TGM.currentPiecePositions()) {
+        drawBlock(point2.x, point2.y, point2.pieceType, field)
     }
 }
 function setup () {
@@ -40,8 +46,8 @@ function setup () {
     15
     ]
 }
-function drawBlock (x: number, y: number, color: number) {
-    field.fillRect(x * 5, y * 5, 5, 5, colors[color])
+function drawBlock (x: number, y: number, color: number, image2: Image) {
+    image2.fillRect(x * 5, y * 5, 5, 5, colors[color])
 }
 function shouldMoveRight () {
     if (controller.right.isPressed()) {
@@ -55,6 +61,7 @@ let erasing = 0
 let right = 0
 let colors: number[] = []
 let left = 0
+let next: Image = null
 let field: Image = null
 setup()
 scene.setBackgroundColor(11)
@@ -67,15 +74,21 @@ wall.fillRect(0, 105, 60, 5, 14)
 wall.fillRect(0, 0, 5, 110, 14)
 wall.fillRect(55, 0, 5, 110, 14)
 let wallSprite = sprites.create(wall, SpriteKind.Player)
+next = image.create(50, 10)
+let nextSprite = sprites.create(next, SpriteKind.Projectile)
 fieldSprite.y = 65
 wallSprite.y = 65
-TGM.putRandomNextForFirst()
+nextSprite.y = 5
+TGM.pushRandomNextForFirst()
+TGM.popNext()
+TGM.pushRandomNext()
 game.onUpdate(function () {
     if (erasing > 0) {
         erasing += -1
         if (erasing == 0) {
             TGM.erase()
-            TGM.putRandomNext()
+            TGM.popNext()
+            TGM.pushRandomNext()
         }
     }
     if (shouldMoveRight()) {
@@ -93,9 +106,11 @@ game.onUpdate(function () {
                 erasing = 20
             } else {
                 pause(200)
-                TGM.putRandomNext()
+                TGM.popNext()
+                TGM.pushRandomNext()
             }
         }
     }
     drawAllBlocks()
+    drawNextPiece()
 })

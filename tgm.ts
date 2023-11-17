@@ -80,10 +80,21 @@ namespace TGM {
     export class GameController {
         field: Field
         blockState: BlockState
+        nextPieces: PieceType[]
 
         constructor() {
             this.field = new Field(10, 20)
             this.blockState = BlockState.empty()
+            this.nextPieces = []
+        }
+
+        pushNext(pieceType: PieceType) {
+            this.nextPieces.push(pieceType)
+        }
+
+        popNext() {
+            const pieceType = this.nextPieces.pop()
+            this.blockState = new BlockState(pieceType, this.field.width / 2, 1)
         }
 
         canPut(blockState: BlockState): PutTextResult {

@@ -21,7 +21,8 @@ function drawNextPiece () {
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     TGM.rotate(true)
 })
-function drawAllBlocks () {
+function drawFieldBlocks () {
+    field.fill(15)
     for (let x = 0; x <= 9; x++) {
         for (let y = 0; y <= 19; y++) {
             drawBlock(x, y, TGM.getPiece(x, y), field)
@@ -34,23 +35,10 @@ function drawAllBlocks () {
         drawBlock(point2.x, point2.y, point2.pieceType, field)
     }
 }
-function setup () {
-    colors = [
-    15,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    15
-    ]
-}
 function drawBlock (x: number, y: number, color: number, image2: Image) {
-    image2.fillRect(x * 5, y * 5, 5, 5, colors[color])
+    if (color > 0) {
+        image2.fillRect(x * 5, y * 5, 5, 5, color)
+    }
 }
 function shouldMoveRight () {
     if (controller.right.isPressed()) {
@@ -62,26 +50,20 @@ function shouldMoveRight () {
 }
 let erasing = 0
 let right = 0
-let colors: number[] = []
 let left = 0
 let next: Image = null
 let field: Image = null
-setup()
-scene.setBackgroundColor(11)
-field = image.create(50, 100)
-field.fill(15)
-let fieldSprite = sprites.create(field, SpriteKind.Projectile)
 let wall = image.create(60, 110)
-wall.fillRect(0, 0, 60, 5, 14)
-wall.fillRect(0, 105, 60, 5, 14)
-wall.fillRect(0, 0, 5, 110, 14)
-wall.fillRect(55, 0, 5, 110, 14)
 let wallSprite = sprites.create(wall, SpriteKind.Player)
+field = image.create(50, 100)
+let fieldSprite = sprites.create(field, SpriteKind.Projectile)
 next = image.create(50, 10)
 let nextSprite = sprites.create(next, SpriteKind.Projectile)
 fieldSprite.y = 65
 wallSprite.y = 65
 nextSprite.y = 5
+scene.setBackgroundColor(11)
+wall.fill(14)
 TGM.pushRandomNextForFirst()
 TGM.popNext()
 TGM.pushRandomNext()
@@ -114,6 +96,6 @@ game.onUpdate(function () {
             }
         }
     }
-    drawAllBlocks()
+    drawFieldBlocks()
     drawNextPiece()
 })

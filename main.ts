@@ -15,9 +15,6 @@ function shouldMoveLeft () {
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     TGM.rotate(true)
 })
-controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
-    TGM.putRandomNext()
-})
 function setup () {
     colors = [
     15,
@@ -69,7 +66,12 @@ game.onUpdate(function () {
         TGM.moveLeft()
     }
     if (controller.down.isPressed()) {
-        TGM.moveDown()
+        if (!(TGM.moveDown())) {
+            TGM.putCurrentPiece()
+            music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
+            pause(250)
+            TGM.putRandomNext()
+        }
     }
     for (let x = 0; x <= 9; x++) {
         for (let y = 0; y <= 19; y++) {

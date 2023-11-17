@@ -53,11 +53,6 @@ namespace TGM {
     }
 
     //% block
-    export function move(dx: number, dy: number) {
-        gameController.move(dx, dy)
-    }
-
-    //% block
     export function moveRight() {
         gameController.move(1, 0)
     }
@@ -68,13 +63,18 @@ namespace TGM {
     }
 
     //% block
-    export function moveDown() {
-        gameController.move(0, 1)
+    export function moveDown(): boolean {
+        return gameController.move(0, 1)
     }
 
     //% block
     export function drop() {
         while (gameController.move(0, 1)) {}
+    }
+
+    //% block
+    export function putCurrentPiece() {
+        gameController.putCurrentPiece()
     }
 
     //% block

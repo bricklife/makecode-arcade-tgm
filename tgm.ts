@@ -12,17 +12,21 @@ namespace TGM {
             this.field = []
 
             for (let i = 0; i < height + 2; i++) {
-                let row: PieceType[] = []
-                row.push(PieceType.Wall)
-                for (let j = 0; j < width; j++) {
-                    row.push(PieceType.None)
-                }
-                row.push(PieceType.Wall)
-                this.field.push(row)
+                this.field.push(this.makeEmptyRow())
             }
             for (let i = 0; i < width + 2; i++) {
                 this.field[height + 1][i] = PieceType.Wall
             }
+        }
+
+        makeEmptyRow(): PieceType[] {
+            let row: PieceType[] = []
+            row.push(PieceType.Wall)
+            for (let i = 0; i < this.width; i++) {
+                row.push(PieceType.None)
+            }
+            row.push(PieceType.Wall)
+            return row
         }
     }
 
@@ -144,6 +148,32 @@ namespace TGM {
             this.blockState.positions().forEach(e => {
                 this.field.field[e.y][e.x] = this.blockState.pieceType
             })
+            this.blockState = BlockState.empty()
+        }
+
+        markErasingRows(): number {
+            let marked = 0
+            for (let y = 1; y < this.field.height + 1; y++) {
+                if (this.field.field[y].filter(e => e == PieceType.None).length == 0) {
+                    marked++
+                    for (let x = 1; x < this.field.width + 1; x++) {
+                        this.field.field[y][x] = PieceType.Erasing
+                    }
+                }
+            }
+            return marked
+        }
+
+        erase() {
+            let newField: PieceType[][] = []
+            for (let y = 0; y < this.field.height + 2; y++) {
+                if (this.field.field[y].filter(e => e == PieceType.Erasing).length > 0) {
+                    newField.insertAt(0, this.field.makeEmptyRow())
+                } else {
+                    newField.push(this.field.field[y])
+                }
+            }
+            this.field.field = newField
         }
     }
 

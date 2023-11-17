@@ -69,7 +69,7 @@ namespace TGM {
 
     //% block
     export function drop() {
-        while (gameController.move(0, 1)) {}
+        while (gameController.move(0, 1)) { }
     }
 
     //% block
@@ -78,8 +78,13 @@ namespace TGM {
     }
 
     //% block
-    export function putNext(pieceType: PieceType) {
-        gameController.blockState = new BlockState(pieceType, 5, 1)
+    export function markErasingRows(): number {
+        return gameController.markErasingRows()
+    }
+
+    //% block
+    export function erase() {
+        gameController.erase()
     }
 
     //% block

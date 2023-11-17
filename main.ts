@@ -15,6 +15,16 @@ function shouldMoveLeft () {
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     TGM.rotate(true)
 })
+function drawAllBlocks () {
+    for (let x = 0; x <= 9; x++) {
+        for (let y = 0; y <= 19; y++) {
+            drawBlock(x, y, TGM.getPiece(x, y))
+        }
+    }
+    for (let point of TGM.currentPiecePositions()) {
+        drawBlock(point.x, point.y, point.pieceType)
+    }
+}
 function setup () {
     colors = [
     15,
@@ -26,7 +36,8 @@ function setup () {
     6,
     7,
     8,
-    9
+    9,
+    15
     ]
 }
 function drawBlock (x: number, y: number, color: number) {
@@ -40,25 +51,33 @@ function shouldMoveRight () {
     }
     return right == 1 || right > 15
 }
+let erasing = 0
 let right = 0
 let colors: number[] = []
 let left = 0
 let field: Image = null
 setup()
-scene.setBackgroundColor(12)
+scene.setBackgroundColor(11)
 field = image.create(50, 100)
 field.fill(15)
 let fieldSprite = sprites.create(field, SpriteKind.Projectile)
 let wall = image.create(60, 110)
-wall.fillRect(0, 0, 60, 5, 11)
-wall.fillRect(0, 105, 60, 5, 11)
-wall.fillRect(0, 0, 5, 110, 11)
-wall.fillRect(55, 0, 5, 110, 11)
+wall.fillRect(0, 0, 60, 5, 14)
+wall.fillRect(0, 105, 60, 5, 14)
+wall.fillRect(0, 0, 5, 110, 14)
+wall.fillRect(55, 0, 5, 110, 14)
 let wallSprite = sprites.create(wall, SpriteKind.Player)
 fieldSprite.y = 65
 wallSprite.y = 65
 TGM.putRandomNextForFirst()
 game.onUpdate(function () {
+    if (erasing > 0) {
+        erasing += -1
+        if (erasing == 0) {
+            TGM.erase()
+            TGM.putRandomNext()
+        }
+    }
     if (shouldMoveRight()) {
         TGM.moveRight()
     }
@@ -69,16 +88,14 @@ game.onUpdate(function () {
         if (!(TGM.moveDown())) {
             TGM.putCurrentPiece()
             music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
-            pause(250)
-            TGM.putRandomNext()
+            if (TGM.markErasingRows() > 0) {
+                music.play(music.melodyPlayable(music.magicWand), music.PlaybackMode.InBackground)
+                erasing = 20
+            } else {
+                pause(200)
+                TGM.putRandomNext()
+            }
         }
     }
-    for (let x = 0; x <= 9; x++) {
-        for (let y = 0; y <= 19; y++) {
-            drawBlock(x, y, TGM.getPiece(x, y))
-        }
-    }
-    for (let point of TGM.currentPiecePositions()) {
-        drawBlock(point.x, point.y, point.pieceType)
-    }
+    drawAllBlocks()
 })

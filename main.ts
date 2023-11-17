@@ -27,6 +27,9 @@ function drawAllBlocks () {
             drawBlock(x, y, TGM.getPiece(x, y), field)
         }
     }
+    for (let point2 of TGM.ghostPiecePositions()) {
+        drawBlock(point2.x, point2.y, 9, field)
+    }
     for (let point2 of TGM.currentPiecePositions()) {
         drawBlock(point2.x, point2.y, point2.pieceType, field)
     }

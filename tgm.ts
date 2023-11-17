@@ -79,13 +79,30 @@ namespace TGM {
 
     export class GameController {
         field: Field
-        blockState: BlockState
+        _blockState: BlockState
+        _ghost: BlockState
         nextPieces: PieceType[]
 
         constructor() {
             this.field = new Field(10, 20)
             this.blockState = BlockState.empty()
             this.nextPieces = []
+        }
+
+        set blockState(blockState: BlockState) {
+            this._blockState = blockState
+            this._ghost = new BlockState(blockState.pieceType, blockState.x, blockState.y, blockState.rotation)
+            while (this.canPut(this._ghost.moved(0, 1)) == PutTextResult.canPut) {
+                this._ghost = this._ghost.moved(0, 1)
+            }
+        }
+
+        get blockState(): BlockState {
+            return this._blockState
+        }
+
+        get ghost(): BlockState {
+            return this._ghost
         }
 
         pushNext(pieceType: PieceType) {
@@ -98,6 +115,7 @@ namespace TGM {
         }
 
         canPut(blockState: BlockState): PutTextResult {
+            if (blockState.pieceType == PieceType.None) { return PutTextResult.cannotPut }
             let blockedPositions: BlockStatePosition[] = []
             const positions = blockState.positions()
             for (let i = 0; i < positions.length; i++) {

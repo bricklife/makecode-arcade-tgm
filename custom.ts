@@ -77,6 +77,12 @@ namespace TGM {
     }
 
     //% block
+    export function ghostPiecePositions(): Point[] {
+        return gameController.ghost.positions()
+            .map(e => new Point(e.x - 1, e.y - 1, gameController.blockState.pieceType))
+    }
+
+    //% block
     export function rotate(clockwise: boolean) {
         gameController.rotate(clockwise)
     }

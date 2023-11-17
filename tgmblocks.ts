@@ -13,6 +13,14 @@ namespace TGM {
         Erasing
     }
 
+    export const allPieceType: PieceType[] = [
+        PieceType.I, PieceType.T, PieceType.L, PieceType.J, PieceType.S, PieceType.Z, PieceType.O
+    ]
+
+    export const allPieceTypeForFirst: PieceType[] = [
+        PieceType.I, PieceType.T, PieceType.L, PieceType.J, PieceType.O
+    ]
+
     const None: number[][][] = []
 
     const I = [

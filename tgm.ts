@@ -53,10 +53,6 @@ namespace TGM {
             return new BlockState(this.pieceType, this.x + dx, this.y + dy, this.rotation)
         }
 
-        rotate(clockwise: boolean) {
-            this.rotation = (this.rotation + (clockwise ? 3 : 1)) % 4
-        }
-
         rotated(clockwise: boolean): BlockState {
             let rotation = (this.rotation + (clockwise ? 3 : 1)) % 4
             return new BlockState(this.pieceType, this.x, this.y, rotation)
@@ -144,9 +140,11 @@ namespace TGM {
             return false
         }
 
-        pushNext() {
-            const next = Math.floor(Math.random() * 7) + 1
-            this.blockState = new BlockState(next, this.field.width / 2, 0)
+        putCurrentPiece() {
+            this.blockState.positions().forEach(e => {
+                console.log(e);
+                this.field.field[e.y][e.x] = this.blockState.pieceType
+            })
         }
     }
 

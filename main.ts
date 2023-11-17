@@ -4,18 +4,7 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     TGM.rotate(false)
 })
-function should_move_right () {
-    if (controller.right.isPressed()) {
-        right += 1
-    } else {
-        right = 0
-    }
-    return right == 1 || right > 15
-}
-controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    TGM.rotate(true)
-})
-function should_move_left () {
+function shouldMoveLeft () {
     if (controller.left.isPressed()) {
         left += 1
     } else {
@@ -23,8 +12,8 @@ function should_move_left () {
     }
     return left == 1 || left > 15
 }
-controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
-    TGM.putNext(TGM.PieceType.I)
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    TGM.rotate(true)
 })
 function setup () {
     colors = [
@@ -43,9 +32,17 @@ function setup () {
 function drawBlock (x: number, y: number, color: number) {
     field.fillRect(x * 5, y * 5, 5, 5, colors[color])
 }
+function shouldMoveRight () {
+    if (controller.right.isPressed()) {
+        right += 1
+    } else {
+        right = 0
+    }
+    return right == 1 || right > 15
+}
+let right = 0
 let colors: number[] = []
 let left = 0
-let right = 0
 let field: Image = null
 setup()
 scene.setBackgroundColor(12)
@@ -60,16 +57,21 @@ wall.fillRect(55, 0, 5, 110, 11)
 let wallSprite = sprites.create(wall, SpriteKind.Player)
 fieldSprite.y = 65
 wallSprite.y = 65
-TGM.putNext(TGM.PieceType.T)
+TGM.putRandomNextForFirst()
 game.onUpdate(function () {
-    if (should_move_right()) {
+    if (shouldMoveRight()) {
         TGM.moveRight()
     }
-    if (should_move_left()) {
+    if (shouldMoveLeft()) {
         TGM.moveLeft()
     }
     if (controller.down.isPressed()) {
-        TGM.moveDown()
+        if (!(TGM.moveDown())) {
+            TGM.putCurrentPiece()
+            music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
+            pause(250)
+            TGM.putRandomNext()
+        }
     }
     for (let x = 0; x <= 9; x++) {
         for (let y = 0; y <= 19; y++) {

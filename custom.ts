@@ -81,6 +81,18 @@ namespace TGM {
     export function putNext(pieceType: PieceType) {
         gameController.blockState = new BlockState(pieceType, 5, 1)
     }
+
+    //% block
+    export function putRandomNext() {
+        const pieceType = allPieceType[Math.floor(Math.random() * allPieceType.length)]
+        gameController.blockState = new BlockState(pieceType, 5, 1)
+    }
+
+    //% block
+    export function putRandomNextForFirst() {
+        const pieceType = allPieceTypeForFirst[Math.floor(Math.random() * allPieceTypeForFirst.length)]
+        gameController.blockState = new BlockState(pieceType, 5, 1)
+    }
 }
 
 //% blockNamespace=TGM

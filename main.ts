@@ -35,28 +35,22 @@ function drawFieldBlocks () {
         drawBlock(point3.x, point3.y, point3.pieceType, field)
     }
 }
-function checkErasing () {
-    if (erasing) {
-        erasing = false
-        music.play(music.melodyPlayable(music.magicWand), music.PlaybackMode.InBackground)
-        pause(400)
-        TGM.erase()
+function putPiece () {
+    music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
+    if (TGM.markErasingRows() > 0) {
+        erasing = true
+    } else {
+        pause(200)
         TGM.popNext()
         TGM.pushRandomNext()
     }
 }
-function checkPut () {
-    if (put) {
-        put = false
-        music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
-        if (TGM.markErasingRows() > 0) {
-            erasing = true
-        } else {
-            pause(200)
-            TGM.popNext()
-            TGM.pushRandomNext()
-        }
-    }
+function eraseRows () {
+    music.play(music.melodyPlayable(music.magicWand), music.PlaybackMode.InBackground)
+    pause(400)
+    TGM.erase()
+    TGM.popNext()
+    TGM.pushRandomNext()
 }
 function drawFieldBlock (x: number, y: number, color: number, image2: Image) {
     if (color >= 1 && color <= 7) {
@@ -78,14 +72,14 @@ function shouldMoveRight () {
 function drawGhostBlock (x: number, y: number, color: number, image2: Image) {
     image2.drawRect(x * 5, y * 5, 5, 5, color)
 }
-let right = 0
 let put = false
+let right = 0
 let erasing = false
 let left = 0
 let next: Image = null
 let field: Image = null
 let wall = image.create(160, 120)
-let wallSprite = sprites.create(wall, SpriteKind.Player)
+let wallSprite = sprites.create(wall, SpriteKind.Projectile)
 field = image.create(50, 100)
 let fieldSprite = sprites.create(field, SpriteKind.Projectile)
 next = image.create(50, 10)
@@ -99,18 +93,24 @@ TGM.pushRandomNextForFirst()
 TGM.popNext()
 TGM.pushRandomNext()
 game.onUpdate(function () {
-    checkErasing()
-    checkPut()
-    if (shouldMoveRight()) {
-        TGM.moveRight()
-    }
-    if (shouldMoveLeft()) {
-        TGM.moveLeft()
-    }
-    if (controller.down.isPressed()) {
-        if (!(TGM.moveDown())) {
-            TGM.putCurrentPiece()
-            put = true
+    if (erasing) {
+        erasing = false
+        eraseRows()
+    } else if (put) {
+        put = false
+        putPiece()
+    } else {
+        if (shouldMoveRight()) {
+            TGM.moveRight()
+        }
+        if (shouldMoveLeft()) {
+            TGM.moveLeft()
+        }
+        if (controller.down.isPressed()) {
+            if (!(TGM.moveDown())) {
+                TGM.putCurrentPiece()
+                put = true
+            }
         }
     }
     drawFieldBlocks()

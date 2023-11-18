@@ -22,17 +22,17 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     TGM.rotate(true)
 })
 function drawFieldBlocks () {
-    field.fill(10)
+    field.fill(0)
     for (let x = 0; x <= 9; x++) {
         for (let y = 0; y <= 19; y++) {
-            drawBlock(x, y, TGM.getPiece(x, y), field)
+            drawFieldBlock(x, y, TGM.getPiece(x, y), field)
         }
     }
-    for (let point of TGM.ghostPiecePositions()) {
-        drawBlock(point.x, point.y, 9, field)
+    for (let point2 of TGM.ghostPiecePositions()) {
+        drawGhostBlock(point2.x, point2.y, point2.pieceType, field)
     }
-    for (let point of TGM.currentPiecePositions()) {
-        drawBlock(point.x, point.y, point.pieceType, field)
+    for (let point3 of TGM.currentPiecePositions()) {
+        drawBlock(point3.x, point3.y, point3.pieceType, field)
     }
 }
 function checkErasing () {
@@ -58,10 +58,14 @@ function checkPut () {
         }
     }
 }
-function drawBlock (x: number, y: number, color: number, image2: Image) {
-    if (color > 0) {
+function drawFieldBlock (x: number, y: number, color: number, image2: Image) {
+    if (color >= 1 && color <= 7) {
         image2.fillRect(x * 5, y * 5, 5, 5, color)
+        image2.drawRect(x * 5, y * 5, 5, 5, color + 7)
     }
+}
+function drawBlock (x: number, y: number, color: number, image2: Image) {
+    image2.fillRect(x * 5, y * 5, 5, 5, color)
 }
 function shouldMoveRight () {
     if (controller.right.isPressed()) {
@@ -71,23 +75,26 @@ function shouldMoveRight () {
     }
     return right == 1 || right > 15
 }
+function drawGhostBlock (x: number, y: number, color: number, image2: Image) {
+    image2.drawRect(x * 5, y * 5, 5, 5, color)
+}
 let right = 0
 let put = false
 let erasing = false
 let left = 0
 let next: Image = null
 let field: Image = null
-let wall = image.create(60, 110)
+let wall = image.create(160, 120)
 let wallSprite = sprites.create(wall, SpriteKind.Player)
 field = image.create(50, 100)
 let fieldSprite = sprites.create(field, SpriteKind.Projectile)
 next = image.create(50, 10)
 let nextSprite = sprites.create(next, SpriteKind.Projectile)
 fieldSprite.y = 65
-wallSprite.y = 65
 nextSprite.y = 5
-scene.setBackgroundColor(11)
-wall.fill(14)
+wall.fill(0)
+wall.fillRect(50, 10, 60, 110, 15)
+wall.fillRect(55, 15, 50, 100, 0)
 TGM.pushRandomNextForFirst()
 TGM.popNext()
 TGM.pushRandomNext()

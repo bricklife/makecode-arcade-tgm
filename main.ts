@@ -78,17 +78,19 @@ let erasing = false
 let left = 0
 let next: Image = null
 let field: Image = null
-let wall = image.create(160, 120)
-let wallSprite = sprites.create(wall, SpriteKind.Projectile)
+let background = image.create(160, 120)
+let backgroundSprite = sprites.create(background, SpriteKind.Projectile)
 field = image.create(50, 100)
 let fieldSprite = sprites.create(field, SpriteKind.Projectile)
 next = image.create(50, 10)
 let nextSprite = sprites.create(next, SpriteKind.Projectile)
 fieldSprite.y = 65
 nextSprite.y = 5
-wall.fill(0)
-wall.fillRect(50, 10, 60, 110, 15)
-wall.fillRect(55, 15, 50, 100, 0)
+for (let index = 0; index <= 60; index++) {
+    background.drawLine(0, index * 2, 159, index * 2, 11)
+}
+background.fillRect(50, 10, 60, 110, 15)
+background.fillRect(55, 15, 50, 100, 0)
 TGM.pushRandomNextForFirst()
 TGM.popNext()
 TGM.pushRandomNext()

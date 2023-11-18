@@ -70,7 +70,7 @@ function shouldMoveRight () {
     return right == 1 || right > 15
 }
 function drawGhostBlock (x: number, y: number, color: number, image2: Image) {
-    image2.drawRect(x * 5, y * 5, 5, 5, color)
+    image2.drawRect(x * 5, y * 5, 5, 5, color + 7)
 }
 let put = false
 let right = 0

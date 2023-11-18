@@ -93,6 +93,8 @@ for (let index = 0; index <= 60; index++) {
 background.fillRect(50, 10, 60, 110, 15)
 background.fillRect(55, 15, 50, 100, 0)
 background.fillRect(50, 0, 60, 10, 0)
+let numberSprite = numbersprite.create(0, 0, 15)
+numberSprite.right = 45
 TGM.pushRandomNextForFirst()
 TGM.popNext()
 TGM.pushRandomNext()
@@ -113,6 +115,7 @@ game.onUpdate(function () {
         if (controller.down.isPressed()) {
             if (!(TGM.moveDown())) {
                 TGM.putCurrentPiece()
+                numberSprite.changeNumber(1)
                 put = true
             }
         }

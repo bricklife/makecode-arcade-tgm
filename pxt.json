@@ -3,7 +3,8 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "color-coded-tilemap": "*"
+        "color-coded-tilemap": "*",
+        "arcade-text": "github:microsoft/arcade-text#v1.3.0"
     },
     "files": [
         "main.blocks",
@@ -14,7 +15,8 @@
         "tilemap.g.ts",
         "custom.ts",
         "tgm.ts",
-        "tgmblocks.ts"
+        "tgmblocks.ts",
+        "numbersprite.ts"
     ],
     "testFiles": [
         "test.ts"

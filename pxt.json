@@ -3,8 +3,7 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "color-coded-tilemap": "*",
-        "arcade-text": "github:microsoft/arcade-text#v1.3.0"
+        "color-coded-tilemap": "*"
     },
     "files": [
         "main.blocks",

@@ -92,6 +92,7 @@ for (let index = 0; index <= 60; index++) {
 }
 background.fillRect(50, 10, 60, 110, 15)
 background.fillRect(55, 15, 50, 100, 0)
+background.fillRect(50, 0, 60, 10, 0)
 TGM.pushRandomNextForFirst()
 TGM.popNext()
 TGM.pushRandomNext()

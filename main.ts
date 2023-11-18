@@ -88,6 +88,7 @@ fieldSprite.y = 65
 nextSprite.y = 5
 for (let index = 0; index <= 60; index++) {
     background.drawLine(0, index * 2, 159, index * 2, 11)
+    background.drawLine(0, index * 2 + 1, 159, index * 2 + 1, 12)
 }
 background.fillRect(50, 10, 60, 110, 15)
 background.fillRect(55, 15, 50, 100, 0)

@@ -112,7 +112,6 @@ for (let index = 0; index <= 60; index++) {
 }
 background.fillRect(50, 10, 60, 110, 15)
 background.fillRect(55, 15, 50, 100, 0)
-background.fillRect(50, 0, 60, 10, 0)
 let countSprite = numbersprite.create(0, 0, 15)
 linesSprite = numbersprite.create(0, 0, 15)
 line1Sprite = numbersprite.create(0, 0, 15)

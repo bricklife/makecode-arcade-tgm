@@ -1,3 +1,6 @@
+namespace SpriteKind {
+    export const Text = SpriteKind.create()
+}
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     TGM.drop()
 })
@@ -37,7 +40,8 @@ function drawFieldBlocks () {
 }
 function putPiece () {
     music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
-    if (TGM.markErasingRows() > 0) {
+    erasedCount = TGM.markErasingRows()
+    if (erasedCount > 0) {
         erasing = true
     } else {
         pause(200)
@@ -47,6 +51,16 @@ function putPiece () {
 }
 function eraseRows () {
     music.play(music.melodyPlayable(music.magicWand), music.PlaybackMode.InBackground)
+    linesSprite.changeNumber(erasedCount)
+    if (erasedCount == 1) {
+        line1Sprite.changeNumber(1)
+    } else if (erasedCount == 2) {
+        line2Sprite.changeNumber(1)
+    } else if (erasedCount == 3) {
+        line3Sprite.changeNumber(1)
+    } else {
+        line4Sprite.changeNumber(1)
+    }
     pause(400)
     TGM.erase()
     TGM.popNext()
@@ -75,7 +89,13 @@ function drawGhostBlock (x: number, y: number, color: number, image2: Image) {
 let put = false
 let right = 0
 let erasing = false
+let erasedCount = 0
 let left = 0
+let line4Sprite: NumberSprite = null
+let line3Sprite: NumberSprite = null
+let line2Sprite: NumberSprite = null
+let line1Sprite: NumberSprite = null
+let linesSprite: NumberSprite = null
 let next: Image = null
 let field: Image = null
 let background = image.create(160, 120)
@@ -93,8 +113,23 @@ for (let index = 0; index <= 60; index++) {
 background.fillRect(50, 10, 60, 110, 15)
 background.fillRect(55, 15, 50, 100, 0)
 background.fillRect(50, 0, 60, 10, 0)
-let numberSprite = numbersprite.create(0, 0, 15)
-numberSprite.right = 45
+let countSprite = numbersprite.create(0, 0, 15)
+linesSprite = numbersprite.create(0, 0, 15)
+line1Sprite = numbersprite.create(0, 0, 15)
+line2Sprite = numbersprite.create(0, 0, 15)
+line3Sprite = numbersprite.create(0, 0, 15)
+line4Sprite = numbersprite.create(0, 0, 15)
+countSprite.setScale(2, ScaleAnchor.Middle)
+linesSprite.setScale(2, ScaleAnchor.Middle)
+for (let value of sprites.allOfKind(SpriteKind.Number)) {
+    value.right = 40
+}
+countSprite.bottom = 50
+linesSprite.bottom = 70
+line1Sprite.bottom = 85
+line2Sprite.bottom = 95
+line3Sprite.bottom = 105
+line4Sprite.bottom = 115
 TGM.pushRandomNextForFirst()
 TGM.popNext()
 TGM.pushRandomNext()
@@ -115,7 +150,7 @@ game.onUpdate(function () {
         if (controller.down.isPressed()) {
             if (!(TGM.moveDown())) {
                 TGM.putCurrentPiece()
-                numberSprite.changeNumber(1)
+                countSprite.changeNumber(1)
                 put = true
             }
         }

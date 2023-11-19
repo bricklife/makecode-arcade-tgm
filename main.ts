@@ -126,10 +126,10 @@ for (let value of sprites.allOfKind(SpriteKind.Number)) {
 }
 countSprite.bottom = 50
 linesSprite.bottom = 70
-line1Sprite.bottom = 85
-line2Sprite.bottom = 95
-line3Sprite.bottom = 105
-line4Sprite.bottom = 115
+line4Sprite.bottom = 85
+line3Sprite.bottom = 95
+line2Sprite.bottom = 105
+line1Sprite.bottom = 115
 TGM.pushRandomNextForFirst()
 TGM.popNext()
 TGM.pushRandomNext()

@@ -104,14 +104,16 @@ field = image.create(50, 100)
 let fieldSprite = sprites.create(field, SpriteKind.Projectile)
 next = image.create(50, 10)
 let nextSprite = sprites.create(next, SpriteKind.Projectile)
-fieldSprite.y = 65
-nextSprite.y = 5
+fieldSprite.top = 15
+nextSprite.top = 0
 for (let index = 0; index <= 60; index++) {
     background.drawLine(0, index * 2, 159, index * 2, 11)
     background.drawLine(0, index * 2 + 1, 159, index * 2 + 1, 12)
 }
 background.fillRect(50, 10, 60, 110, 15)
+background.fillRect(58, 0, 44, 10, 15)
 background.fillRect(55, 15, 50, 100, 0)
+background.fillRect(60, 0, 40, 10, 0)
 let countSprite = numbersprite.create(0, 0, 15)
 linesSprite = numbersprite.create(0, 0, 15)
 line1Sprite = numbersprite.create(0, 0, 15)

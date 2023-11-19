@@ -59,7 +59,12 @@ namespace TGM {
     }
 
     //% block
-    export function popNext() {
+    export function popNext(): boolean {
+        return gameController.popNext()
+    }
+
+    //% block
+    export function popNextStatement() {
         gameController.popNext()
     }
 

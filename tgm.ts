@@ -109,9 +109,10 @@ namespace TGM {
             this.nextPieces.push(pieceType)
         }
 
-        popNext() {
-            const pieceType = this.nextPieces.pop()
+        popNext(): boolean {
+            const pieceType = this.nextPieces.shift()
             this.blockState = new BlockState(pieceType, this.field.width / 2, 1)
+            return this.canPut(this.blockState) == PutTextResult.canPut
         }
 
         canPut(blockState: BlockState): PutTextResult {

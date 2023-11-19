@@ -42,11 +42,11 @@ function putPiece () {
     music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
     erasedCount = TGM.markErasingRows()
     if (erasedCount > 0) {
-        erasing = true
+        isErasing = true
     } else {
         pause(200)
-        TGM.popNext()
         TGM.pushRandomNext()
+        isGameover = !(TGM.popNext())
     }
 }
 function eraseRows () {
@@ -63,8 +63,8 @@ function eraseRows () {
     }
     pause(400)
     TGM.erase()
-    TGM.popNext()
     TGM.pushRandomNext()
+    isGameover = !(TGM.popNext())
 }
 function drawFieldBlock (x: number, y: number, color: number, image2: Image) {
     if (color >= 1 && color <= 7) {
@@ -86,9 +86,12 @@ function shouldMoveRight () {
 function drawGhostBlock (x: number, y: number, color: number, image2: Image) {
     image2.drawRect(x * 5, y * 5, 5, 5, color + 7)
 }
-let put = false
+let y = 0
+let gameoverCountdown = 0
+let isPut = false
 let right = 0
-let erasing = false
+let isGameover = false
+let isErasing = false
 let erasedCount = 0
 let left = 0
 let line4Sprite: NumberSprite = null
@@ -132,15 +135,17 @@ line3Sprite.bottom = 95
 line2Sprite.bottom = 105
 line1Sprite.bottom = 115
 TGM.pushRandomNextForFirst()
-TGM.popNext()
 TGM.pushRandomNext()
+TGM.popNextStatement()
 game.onUpdate(function () {
-    if (erasing) {
-        erasing = false
+    if (isErasing) {
+        isErasing = false
         eraseRows()
-    } else if (put) {
-        put = false
+    } else if (isPut) {
+        isPut = false
         putPiece()
+    } else if (isGameover) {
+        TGM.putCurrentPiece()
     } else {
         if (shouldMoveRight()) {
             TGM.moveRight()
@@ -152,10 +157,17 @@ game.onUpdate(function () {
             if (!(TGM.moveDown())) {
                 TGM.putCurrentPiece()
                 countSprite.changeNumber(1)
-                put = true
+                isPut = true
             }
         }
     }
     drawFieldBlocks()
     drawNextPiece()
+    if (isGameover) {
+        for (let index = 0; index <= gameoverCountdown; index++) {
+            y = 100 - index * 2
+            field.drawLine(0, y, 50, y, 0)
+        }
+        gameoverCountdown = Math.min(gameoverCountdown + 1, 50)
+    }
 })
